@@ -3,28 +3,42 @@ import ytdl from 'ytdl-core';
 import ytsr from 'ytsr';
 
 const conn = new WAConnection();
+const botName = 'BotDiCesco';
+const ownerName = 'Cesco';
+const ownerNumber = 'wa.me/393293262584';
 
 conn.on('connecting', () => {
-    console.log('Connessione in corso...');
+    console.log(`${botName} sta connettendosi...`);
 });
 
 conn.on('open', () => {
-    console.log('Connesso!');
+    console.log(`${botName} è connesso!`);
 });
 
 await conn.connect();
 
-console.log('Bot avviato...');
+console.log(`${botName} avviato...`);
 
-// Funzione per gestire i messaggi
 conn.on('chat-update', async (chatUpdate) => {
     if (!chatUpdate.hasNewMessage) return;
     const message = chatUpdate.messages.all()[0];
     const sender = message.key.remoteJid;
 
+    if (message.message.audio) {
+        const audioResponse = {
+            audio: { url: 'link_dell_audio' }, // Sostituisci con il link dell'audio
+            caption: `BotDiCesco`
+        };
+        conn.sendMessage(sender, audioResponse, MessageType.audio);
+    }
+
+    if (message.message.conversation.startsWith('!settings')) {
+        const settingsMessage = `Owner: ${ownerName}\nNumero: ${ownerNumber}`;
+        conn.sendMessage(sender, settingsMessage, MessageType.text);
+    }
+
     if (message.message.conversation.startsWith('!antilink')) {
-        // Attiva l'antilink
-        conn.sendMessage(sender, '🔒 Funzione antilink attivata!', MessageType.text);
+        conn.sendMessage(sender, `🔒 Funzione antilink attivata da ${ownerName}!`, MessageType.text);
     }
 
     if (message.message.conversation.startsWith('!play')) {
